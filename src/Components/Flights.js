@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './Airplane.css';
+import './Airplanes.css';
+import Navbar from './Navbar';
 
 export default class Flights extends Component {
 
@@ -37,6 +38,7 @@ export default class Flights extends Component {
   render() {
     return (
       <div>
+        <Navbar />
         <h1> Virgin Airlines </h1>
         <FlightForm onSubmit={this._createFlight}/>
         <FlightsDisplay flights={this.state.flights} />

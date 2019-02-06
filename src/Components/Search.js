@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './Airplane.css';
+import './Airplanes.css';
+import Navbar from './Navbar';
 
 export default class Search extends Component {
 
@@ -18,6 +19,7 @@ export default class Search extends Component {
             from: p.from
           }
         })
+      //  localhost:3001/search?to="Orlando"&from="Sydney" [{id:1, plane: Whatever}]
         .then(function (response) {
           this.setState({
             flights: [...this.state.flights, p]
@@ -28,6 +30,8 @@ export default class Search extends Component {
     render() {
       return (
         <div>
+          <Navbar />
+          <h1> Virgin Airlines </h1>
           <SearchField onSubmit={this._searchFlights}/>
           <FlightsDisplay flights={this.state.flights}/>
         </div>

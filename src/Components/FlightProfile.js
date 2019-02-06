@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './Airplane.css';
+import './Airplanes.css';
+import Navbar from './Navbar';
 
 export default class Flights extends Component {
 

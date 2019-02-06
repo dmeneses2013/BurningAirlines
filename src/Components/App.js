@@ -8,9 +8,9 @@ class App extends Component {
     return (
       <div className="App">
         <nav>
-          <li>Search</li>
-          <li>Flights</li>
-          <li>Planes</li>
+          <a href="/search">Search</a>
+          <a href="/flights">Flights</a>
+          <a href="/planes">Planes</a>
         </nav>
         <div> <Search /> </div>
       </div>

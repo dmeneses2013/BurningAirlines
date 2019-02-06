@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './Airplane.css';
+import './Airplanes.css';
+import Navbar from './Navbar';
 
 export default class AdminPlanes extends Component {
 
@@ -23,6 +24,7 @@ export default class AdminPlanes extends Component {
   render() {
     return (
       <div>
+        <Navbar />
         <h1> Virgin Airlines </h1>
         <AdminPlaneForm onSubmit={this._createPlane}/>
         <Gallery2 name={this.state.name} rows={this.state.rows} columns={this.state.columns}/>
@@ -74,7 +76,7 @@ class AdminPlaneForm extends Component {
 }
 
 function Gallery2(props) {
-  const grid = <div id="grid-container">{this.state.name}</div>;
+  const grid = <div id="grid-container"> </div>;
   return (
     grid
   )

@@ -9,8 +9,8 @@ export default class Flights extends Component {
     super()
     this.state = {
       flights: [
-        {flightnumber: '1', date: 'Date 1', to: 'This is to field 1', from: 'This is from field 1'},
-        {flightnumber: '2', date: 'Date 2', to: 'This is to field 2', from: 'This is from field 2'}]
+        {id: 1, flightnumber: '1', date: 'Date 1', to: 'This is to field 1', from: 'This is from field 1'},
+        {id: 2, flightnumber: '2', date: 'Date 2', to: 'This is to field 2', from: 'This is from field 2'}]
     }
     this._createFlight = this._createFlight.bind(this);
   }
@@ -105,7 +105,7 @@ function FormButtons(props) {
 function FlightsDisplay(props) {
   return (
     <ul>
-      { props.flights.map(flight => <li>{flight.flightnumber} {flight.date} {flight.to} {flight.from}</li>)}
+      { props.flights.map(flight => <li key={flight.id}> {flight.flightnumber} {flight.date} {flight.to} {flight.from}</li>)}
     </ul>
   )
 }

@@ -80,7 +80,7 @@ class SearchField extends Component {
 function FlightsDisplay(props) {
   return (
     <ul>
-      { props.flights.map(flight => <li>{flight.flightnumber} {flight.date} {flight.to} {flight.from}</li>)}
+      { props.flights.map(flight => <li key={flight.id}>{flight.flightnumber} {flight.date} {flight.to} {flight.from}</li>)}
     </ul>
   )
 }

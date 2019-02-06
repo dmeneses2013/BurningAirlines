@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './Airplanes.css';
 import Navbar from './Navbar';
+import './GridDisplay.scss'
 
 export default class AdminPlanes extends Component {
 
@@ -10,7 +11,8 @@ export default class AdminPlanes extends Component {
     this.state = {
       name: '',
       rows: '',
-      cols: ''
+      cols: '',
+      seats: []
       }
     this._createPlane = this._createPlane.bind(this);
   }
@@ -27,7 +29,9 @@ export default class AdminPlanes extends Component {
         <Navbar />
         <h1> Virgin Airlines </h1>
         <AdminPlaneForm onSubmit={this._createPlane}/>
-        <Gallery2 name={this.state.name} rows={this.state.rows} columns={this.state.columns}/>
+        <div class="wrapper">
+        <Gallery2 name={this.state.name} rows={this.state.rows} cols={this.state.cols}/>
+        </div>
       </div>
     );
   }
@@ -75,10 +79,26 @@ class AdminPlaneForm extends Component {
   }
 }
 
+
+
 function Gallery2(props) {
-  const grid = <div id="grid-container"> </div>;
+  const cols = parseInt(props.cols, 10);
+  const rows = parseInt(props.rows, 10);
+  const total = cols + rows;
+  let divs = [];
+  let labels = ['A','B','C','D','E','F','G','H','I','J','K']
+  // The first row will label the columns
+  for(let i = 0; i < parseInt(props.cols, 10); i++) {
+      divs.push (<div className='grid-item-label' key={labels[i]} > {labels[i]}</div>)
+  }
+  // Display seats all seats in a single horizontal line
+  for(let i = 0; i < total; i++) {
+      divs.push (<div className='grid-item' key={i} >{i}</div>)
+  }
+  // Now wrap seats by column number
+  document.documentElement.style.setProperty("--colNum", props.cols);
   return (
-    grid
+    divs
   )
 }
 

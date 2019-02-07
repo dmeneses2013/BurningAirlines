@@ -3,21 +3,28 @@ import axios from 'axios';
 
 const SERVER_URL = (id) => `http://localhost:3000/flights/${id}.json`;
 
+
+
 class Seats extends Component {
   constructor(props){
     super();
-    this.state = {flight : {"id":0,"flight_number":"test","origin":"test","destination":"test","date":"01-01-0000","airplane":"Aaaaa A000-000","rows":1,"columns":1,"booked_seats":[["1","1"]]}};
+    this.state = {flight : {"id":0,"flight_number":"test","origin":"test","destination":"test","date":"01-01-0000","airplane":"Aaaaa A000-000","rows":1,"columns":1,"booked_seats":[["1","1"]]}, id : props.match.params.id};
     this.createTable = this.createTable.bind(this);
-    this.fetchFlight(props.match.params.id);
-    // axios.post('http://localhost:3000/reservations', {"flight_id" : 23, "user_id": 1, "row": 1, "column": 4});
+    this._handleSubmit = this._handleSubmit.bind(this);
+    this.fetchFlight = this.fetchFlight.bind(this);
+    this.fetchFlight();
   }
 
-  fetchFlight(id) {
-    const url = SERVER_URL(id);
+
+
+  fetchFlight() {
+    const url = SERVER_URL(this.state.id);
     axios.get(url).then( results => {
       this.setState({ flight : results.data.flights[0] });
       console.log(results.data.flights[0]);
+      setTimeout(this.fetchFlight,100);
     });
+
   }
 
   arraysEqual(arr1, arr2) {
@@ -29,7 +36,13 @@ class Seats extends Component {
     }
 
     return true;
-}
+  }
+
+  _handleSubmit(e){
+    const rowAndCol = e.target.value.split(",");
+    axios.post('http://localhost:3000/reservations', {"flight_id" : this.state.flight.id, "user_id": 1, "row": rowAndCol[0], "column": rowAndCol[1]}).then(console.log("posted"))
+
+  }
 
   createTable = () => {
     const table = [];
@@ -44,7 +57,7 @@ class Seats extends Component {
           }
         }
         if (!booked) {
-          row.push(<td><span>{`R${i} C${j}`}</span><button>Book</button></td>);
+          row.push(<td><span>{`R${i} C${j}`}</span><button onClick={ this._handleSubmit } value={[i,j]} >Book</button></td>);
         }
         if (booked) {
           row.push(<td>{`R${i} C${j}`}</td>);
@@ -65,7 +78,7 @@ class Seats extends Component {
       <h1>{this.state.flight.flight_number}</h1>
       <h2>{this.state.flight.origin} - {this.state.flight.destination}</h2>
       <h3>{this.state.flight.date}</h3>
-      
+
       <table>
         { this.createTable() }
       </table>

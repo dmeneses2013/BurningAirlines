@@ -3,28 +3,23 @@ import axios from 'axios';
 import './Airplanes.css';
 import Navbar from './Navbar';
 
+import { Link } from 'react-router-dom';
+
+const SERVER_URL = (query, value) => `http://localhost:3000/flights/search/${query}/${value}.json`;
+let URL = "";
+
 export default class Search extends Component {
 
     constructor() {
       super()
-      this.state = {
-          flights: [{id: "1", flightnumber: "Plane",}]
-        }
+      this.state = { flights : [] };
+      this._searchFlights = this._searchFlights.bind(this);
     }
 
-    _searchFlights(p) {
-      axios.get('localhost:3001/search', {
-          params: {
-            to: p.to,
-            from: p.from
-          }
-        })
-      //  localhost:3001/search?to="Orlando"&from="Sydney" [{id:1, plane: Whatever}]
-        .then(function (response) {
-          this.setState({
-            flights: [...this.state.flights, p]
-            })
-        })
+    _searchFlights() {
+      axios.get(URL).then( results => {this.setState({ flights : results.data.flights });
+      console.log(results);});
+      setTimeout(this._searchFlights,3000);
     }
 
     render() {
@@ -41,35 +36,37 @@ export default class Search extends Component {
 
 class SearchField extends Component {
 
-  constructor() {
+  constructor(props) {
     super()
     this.state = {
       to: '',
       from: ''
       }
-    this._handleInput = this._handleInput.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+      this._handleInputFrom = this._handleInputFrom.bind(this);
+      this._handleInputTo = this._handleInputTo.bind(this);
+      this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  _handleInput(e) {
-    this.setState({[e.target.name]: e.target.value});
+  _handleInputFrom(e) {
+    this.setState({ from: e.target.value});
+    URL = SERVER_URL("origin", e.target.value);
+  }
+
+  _handleInputTo(e) {
+    this.setState({ to: e.target.value});
   }
 
   _handleSubmit(e) {
     e.preventDefault();
-    let props = {
-      to: this.state.to,
-      from: this.state.from,
-    }
-    this.props.onSubmit(props);
+    this.props.onSubmit();
   }
 
   render() {
     return (
       <div>
         <form onSubmit={ this._handleSubmit }>
-          <input type="text" name="to" placeholder="To" required onInput={ this._handleInput }></input>
-          <input type="text" name="from" placeholder="From" required onInput={ this._handleInput }></input>
+          <input type="text" name="from" placeholder="From" required onInput={ this._handleInputFrom }></input>
+          <input type="text" name="to" placeholder="To" required onInput={ this._handleInputTo }></input>
           <FormButtons />
         </form>
       </div>
@@ -79,9 +76,30 @@ class SearchField extends Component {
 
 function FlightsDisplay(props) {
   return (
-    <ul>
-      { props.flights.map(flight => <li key={flight.id}>{flight.flightnumber} {flight.date} {flight.to} {flight.from}</li>)}
-    </ul>
+    <table>
+      <tbody>
+          <tr>
+          <th>Date</th>
+          <th>Flight</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Airplane</th>
+          <th>Seats</th>
+          <th>Book</th>
+          </tr>
+        { props.flights.map( f =>
+          <tr key={f.id}>
+          <td>{f.date}</td>
+          <td>{f.flight_number}</td>
+          <td>{f.origin}</td>
+          <td>{f.destination}</td>
+          <td>{f.airplane}</td>
+          <td>{f.rows * f.columns - f.booked_seats.length}</td>
+          <td><Link to={`/flights/${f.id}`}>Book</Link></td>
+          </tr>
+         ) }
+      </tbody>
+      </table>
   )
 }
 
